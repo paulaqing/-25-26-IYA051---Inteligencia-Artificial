@@ -1,4 +1,3 @@
-# warp.py
 import cv2
 import numpy as np
 from utils import ordenar_puntos
@@ -19,9 +18,9 @@ def warp_carta(frame, box):
     if warp.shape[1] > warp.shape[0]:
         warp = cv2.rotate(warp, cv2.ROTATE_90_CLOCKWISE)
 
-    # Comprobar esquina superior izquierda (blanca en cartas)
+    # Revisar brillo en esquina superior izquierda
     try:
-        esquina = warp[5:40, 5:40]
+        esquina = warp[5:25, 5:25]  # más pequeña para evitar símbolos grandes
         gris = cv2.cvtColor(esquina, cv2.COLOR_BGR2GRAY)
         blancos = (gris > 200).sum()
         negros  = (gris < 50).sum()
