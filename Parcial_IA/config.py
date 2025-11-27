@@ -1,16 +1,31 @@
-# Configuración general del proyecto
+# config.py
+import numpy as np
 
-# Rango HSV del tapete verde (ajustable según iluminación)
-HSV_LOWER = [25, 40, 40]
-HSV_UPPER = [95, 255, 255]
-
-# Tamaño de carta warp
+# Tamaño estándar del warp (ancho x alto)
 CARD_W = 200
 CARD_H = 300
 
-# Área mínima de contorno para considerar carta
-AREA_MIN = 2000
+# AREA mínima para considerar un contorno como carta
+AREA_MIN = 1500
 
-# Coordenadas ROI para valor y palo (relativas a CARD_W x CARD_H)
-ROI_VALOR = (10, 20, 40, 50)  # x, y, w, h
-ROI_PALO = (10, 70, 40, 50)   # x, y, w, h
+# Rango HSV del tapete (ajusta si tu tapete tiene otro tono)
+HSV_LOWER = np.array([25, 40, 40])
+HSV_UPPER = np.array([95, 255, 255])
+
+# ROIs relativos al warp (x, y, w, h) — diseñados para CARD_W x CARD_H
+# Valores ampliados para incluir "10" y símbolos grandes
+ROI_VALOR = (10, 10, 41, 57)
+ROI_PALO  = (5, 67, 44, 45)
+
+
+# Carpetas
+PLANTILLAS_VAL = "plantillas/valores"
+PLANTILLAS_PAL = "plantillas/palos"
+CAPTURAS_DIR   = "capturas"
+
+# Plantilla tamaño normalizado (width x height) usado por reconocer
+TPL_W = 60
+TPL_H = 90
+
+# Umbral mínimo de coincidencia (ajustable)
+UMBRAL_MATCH = 0.38

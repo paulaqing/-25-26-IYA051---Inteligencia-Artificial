@@ -1,23 +1,21 @@
+# segmentacion.py
 import cv2
 import numpy as np
-from config import HSV_LOWER, HSV_UPPER, AREA_MIN
+from config import HSV_LOWER, HSV_UPPER
 
-def segmentar_carta(img):
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    lower = np.array(HSV_LOWER)
-    upper = np.array(HSV_UPPER)
-    mask = cv2.inRange(hsv, lower, upper)
+def segmentar_fondo_verde(frame, abrir_iter=2, cerrar_iter=2):
+    """
+    Devuelve máscara binaria donde la carta es 1 (blanco) y el fondo es 0 (negro)
+    Más robusta frente a ruido e iluminación.
+    """
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    mask = cv2.inRange(hsv, HSV_LOWER, HSV_UPPER)
     mask_inv = cv2.bitwise_not(mask)
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (7,7))
-    mask_clean = cv2.morphologyEx(mask_inv, cv2.MORPH_CLOSE, kernel, iterations=1)
-    return mask_clean
 
-def encontrar_cartas(mask):
-    contornos, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    cartas = []
-    for c in contornos:
-        if cv2.contourArea(c) < AREA_MIN:
-            continue
-        box = cv2.boxPoints(cv2.minAreaRect(c))
-        cartas.append(np.int0(box))
-    return cartas
+    # Morfología más agresiva para eliminar pequeños artefactos
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (9,9))
+    mask_clean = cv2.morphologyEx(mask_inv, cv2.MORPH_OPEN, kernel, iterations=abrir_iter)
+    mask_clean = cv2.morphologyEx(mask_clean, cv2.MORPH_CLOSE, kernel, iterations=cerrar_iter)
+
+    # Opcional: eliminar pequeñas áreas con contour filtering (se puede dejar)
+    return mask_clean
