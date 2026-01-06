@@ -55,14 +55,6 @@ upload_and_recognize()
 
 ---
 
-## 🔧 Requisitos
-
-```bash
-pip install tensorflow opencv-python pillow matplotlib seaborn numpy scikit-learn
-```
-
----
-
 ## 📁 Estructura del Dataset
 
 ```
